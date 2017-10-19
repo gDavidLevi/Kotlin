@@ -140,3 +140,8 @@ fun charToInt(c: Char): Int {
     /* Явные преобразования в число */
     return c.toInt() - '0'.toInt()
 }
+
+/**
+ * Краткая функция
+ */
+fun sum(a: Int, b: Int) = a + b
