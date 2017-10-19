@@ -97,13 +97,15 @@ fun main(args: Array<String>) {
     /* Импорт функции из java.lang.Math.sin */
     println(sin(1.0))
 
-    /* Класс */
-    val person = Person("David Levi", 35, "gDavidLevy@gmail.com", null, 100000.00f) // нет никакого слова `new`
-    val employer = Employer(person, "LLC Gazprom energo") // нет никакого слова `new`
+    /* Создание экземпляров классов */
+    val person = Person("David Levi", 35, "gDavidLevy@gmail.com", null, 100000.00f)
+    val employer = Employer(person, "LLC Gazprom energo")
+
+    /* Работа с типами  */
     println(person)
     person.setSalary(100001.00f)
     println("Salary: ${person.getSalary()}")
-    println("Office: ${employer.getCompany()}")
+    println("Office: ${employer.company}")
     person.publicAccess = "set access"
     println("get access and ${person.publicAccess}")
 

@@ -1,8 +1,9 @@
 package ru.davidlevi
 
-class Employer(person: Person, private var company: String) : Person(person) {
-
-    fun getCompany(): String {
-        return this.company
+open class Employer(person: Person, internal var company: String) : Person(person) {
+    // final override fun - запретить возможность переопределения в производных классах
+    final override fun setID(newId: Int) {
+        println("Установили персоне id = ${newId}")
+        super.setID(newId)
     }
 }
