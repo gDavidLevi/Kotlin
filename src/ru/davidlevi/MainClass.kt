@@ -1,3 +1,4 @@
+// имя файла: MainClass.kt
 package ru.davidlevi
 
 import java.lang.Math.sin

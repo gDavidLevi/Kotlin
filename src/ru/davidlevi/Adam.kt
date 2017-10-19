@@ -1,3 +1,4 @@
+// имя файла: Adam.kt
 package ru.davidlevi
 
 open abstract class Adam {

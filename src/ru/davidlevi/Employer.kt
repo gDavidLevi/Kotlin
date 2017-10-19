@@ -1,3 +1,4 @@
+// имя файла: Employer.kt
 package ru.davidlevi
 
 open class Employer(person: Person, internal var company: String) : Person(person) {

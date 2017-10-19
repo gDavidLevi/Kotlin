@@ -1,10 +1,11 @@
+// имя файла: Person.kt
 package ru.davidlevi
 
 // open - не final => может наследоваться
 // без open класс является final
 open class Person : Adam {
     /* неизменяемые приватные поля, final */
-    // protected - то же самое, что и private + видимость в субклассах;
+    // protected - видимость здесь и в подклассах;
     protected val constanta: Int = 0
 
     /* изменяемые приватные поля */

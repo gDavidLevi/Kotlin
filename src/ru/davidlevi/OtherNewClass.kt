@@ -1,3 +1,4 @@
+// имя файла: OtherNewClass.kt
 package ru.davidlevi
 
 class OtherNewClass(person: Person, company: String) : Employer(person, company) {
