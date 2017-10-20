@@ -2,6 +2,7 @@
 package ru.davidlevi
 
 import java.lang.Math.sin
+import kotlin.reflect.KProperty
 
 /**
  * Учим Kotlin
@@ -116,7 +117,6 @@ fun main(args: Array<String>) {
     array.swap(0, 2)
     println(array)
 
-
     /* Класс данных data class... */
     val user1 = User("David", 35)
     println(user1)
@@ -158,8 +158,39 @@ fun main(args: Array<String>) {
             // ...
         }
     }.registerDataProvider("data")
+    println()
 
+    /* Делегированные свойства */
+    class Delegate { // делегат
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+            return "$thisRef, спасибо за делегирование мне '${property.name}'!"
+        }
 
+        operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+            println("$value было присвоено значению '${property.name} в $thisRef.'")
+        }
+    }
+
+    class AnExample {
+        var p: String by Delegate() // привязываем делегата
+    }
+
+    val anExample = AnExample()
+    // При обращении к делегируему свойству:
+    println(anExample.p) // ru.davidlevi.MainClassKt$main$AnExample@5bcab519, спасибо за делегирование мне 'p'!
+    anExample.p = "new"  // new было присвоено значению 'p в ru.davidlevi.MainClassKt$main$AnExample@5700d6b1.'
+
+    /* Ленивые свойства (lazy properties) */
+    val lazyValue1: String by lazy (LazyThreadSafetyMode.NONE) { // NONE - вычисления будут в одной нити (не быть потокобезопасный)
+        println("computed!") // просто выведет в консоль
+        "Hello" // эта строка присвоится переменной lazyValue
+    }
+    println(lazyValue1 + ", World!") // Hello, World!
+    //
+    val lazyValue2: String by lazy (LazyThreadSafetyMode.PUBLICATION) { // PUBLICATION - вычисления будут возможны из разных нитей (потокобезопасный)
+        println("computed!")
+        "Hello"
+    }
 
 }
 
