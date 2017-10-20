@@ -26,6 +26,11 @@ open class Person : Adam {
             field = value
         }
 
+    // Для того, чтобы у сгенерированного в JVM класса был конструктор без параметров,
+    // значения всех свойств должны быть заданы по умолчанию
+    // class Person(val name: String = "", val age: Int = 0)
+
+
     //public - любой клиент, который видит объявленный класс, видит его public члены
     public constructor(name: String, age: Int, email: String, college: String?, salary: Float) {
         this.name = name

@@ -110,6 +110,56 @@ fun main(args: Array<String>) {
     person.publicAccess = "set access"
     println("get access and ${person.publicAccess}")
 
+    /* Функция-расширения swap */
+    val array = mutableListOf(1, 2, 3) // изменяемый список (a la ArrayList)
+    println(array)
+    array.swap(0, 2)
+    println(array)
+
+
+    /* Класс данных data class... */
+    val user1 = User("David", 35)
+    println(user1)
+    val user2: User
+    user2 = user1.copy()
+    println(user2)
+    val user3: User
+    user3 = user1.copy(age = 40) // с корректировкой поля age
+    println(user3)
+
+    /* Классы данных и мульти-декларации */
+    val sarah = User("Sarah", 30)
+    val (name, age) = sarah // поля класса раскидали по переменным
+    println("$name, $age years of age")
+
+    /* Функция возвращает два звачения */
+    val df = Handler(11, 12)
+    val (x1, x2) = df.funReturnsTwoResults(1)
+    println("x1=$x1 x2=$x2")
+
+    /* Анонимные объекты (ориг. Object expressions) */
+    // пример 1. просто объект
+    val adHoc = object {
+        var x: Int = 0
+        var y: Int = 0
+    }
+    print(adHoc.x + adHoc.y)
+    // пример 2.
+    open class A(x: Int) {
+        public open val y: Int = x
+    }
+
+    val ab: A = object : A(1) {
+        override val y = 15
+    }
+    // пример 3. Синглтон. Объявления объектов
+    object {
+        fun registerDataProvider(string: String) {
+            // ...
+        }
+    }.registerDataProvider("data")
+
+
 
 }
 
@@ -145,3 +195,41 @@ fun charToInt(c: Char): Int {
  * Краткая функция
  */
 fun sum(a: Int, b: Int) = a + b
+
+/**
+ * Функция-расширения
+ * Меняет значения местами в MutableList<T> по индексам
+ */
+fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
+    val tmp = this[index1] // 'this' относится к листу типа Т
+    this[index1] = this[index2]
+    this[index2] = tmp
+}
+
+/**
+ * Класс данных data class...
+ *
+ * Компятор автоматические создаёт:
+ * - пара функций equals()/hashCode(),
+ * - toString() в форме "User(name=Jhon, age=42)",
+ * - функции componentN(), которые соответствуют свойствам, в зависимости от их порядка либо объявления,
+ * - функция copy()
+ *
+ * Оформление:
+ * - первичный конструктор должен иметь как минимум один параметр;
+ * - все параметры первичного конструктора должны быть отмечены, как val или var;
+ * - классы данных не могут быть абстрактными, open, sealed или inner;
+ * - дата-классы не могут наследоваться от других классов (но могут реализовывать интерфейсы).
+ */
+data class User(val name: String, val age: Int)
+
+/**
+ * Метод класса возвращает сразу 2 результата
+ */
+data class Handler(var mul: Int = 1, var sum: Int = 0) {
+    fun funReturnsTwoResults(i: Int): Handler {
+        this.mul *= i;
+        this.sum += i;
+        return Handler(mul, sum)
+    }
+}
