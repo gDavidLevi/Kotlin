@@ -2,6 +2,7 @@
 package ru.davidlevi
 
 import java.lang.Math.sin
+import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 /**
@@ -181,25 +182,52 @@ fun main(args: Array<String>) {
     anExample.p = "new"  // new было присвоено значению 'p в ru.davidlevi.MainClassKt$main$AnExample@5700d6b1.'
 
     /* Ленивые свойства (lazy properties) */
-    val lazyValue1: String by lazy (LazyThreadSafetyMode.NONE) { // NONE - вычисления будут в одной нити (не быть потокобезопасный)
+    val lazyValue1: String by lazy(LazyThreadSafetyMode.NONE) {
+        // NONE - вычисления будут в одной нити (не быть потокобезопасный)
         println("computed!") // просто выведет в консоль
         "Hello" // эта строка присвоится переменной lazyValue
     }
     println(lazyValue1 + ", World!") // Hello, World!
     //
-    val lazyValue2: String by lazy (LazyThreadSafetyMode.PUBLICATION) { // PUBLICATION - вычисления будут возможны из разных нитей (потокобезопасный)
-        println("computed!")
+    val lazyValue2: String by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        // PUBLICATION - вычисления будут возможны из разных нитей (потокобезопасный)
+        println("lazy!")
         "Hello"
     }
+
+    /* Observable свойства */
+    class Worker {
+        /*
+        * prop - описание свойства, которое изменяется
+        * old - старое значение
+        * new - новое значение
+        * -> - обработчик
+        */
+        var name: String by Delegates.observable("default") { prop, old, new -> println("$old -> $new") }
+
+        // если нужно иметь возможность запретить присваивание некоторых значений
+        var nameLockd: String by Delegates.vetoable("default") { prop, old, new -> (new != "123") }
+    }
+
+    val worker = Worker()
+    worker.name = "первый"
+    worker.name = "второй"
+    worker.name = "третий"
+    worker.nameLockd = "123"
+    println(worker.nameLockd) // будет default потому что запрещено в лямбде new != "123"
+
+    /* Хранение свойств в ассоциативном списке */
+    // https://kotlinlang.ru/docs/reference/delegated-properties.html
+
 
 }
 
 /**
- * - Выражение when - это умный аналог ru.davidlevi.switch
+ * - Выражение when - это умный аналог switch
  * - Функция
  */
 fun switch(obj: Any) {
-    /* аналог ru.davidlevi.switch */
+    /* аналог switch */
     when (obj) {
         1 -> println("One")
         "Hello" -> println("Greeting")
