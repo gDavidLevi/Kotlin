@@ -57,6 +57,8 @@ open class Person : Adam {
     /* метод устанавливающий */
     fun setSalary(newSalary: Float) {
         this.salary = newSalary
+        //return Unit
+        //return
     }
 
     // override - переопределение
@@ -67,6 +69,8 @@ open class Person : Adam {
     /* open fun разрешает наследнику этот метод override (переопределить) */
     open fun setID(newId:Int) {
         this.id = newId
+        //return Unit
+        //return
     }
 
     // имплементировали из абстрактного класса Adam

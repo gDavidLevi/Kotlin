@@ -2,6 +2,7 @@
 package ru.davidlevi
 
 import java.lang.Math.sin
+import java.util.*
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
@@ -217,10 +218,114 @@ fun main(args: Array<String>) {
     println(worker.nameLockd) // будет default потому что запрещено в лямбде new != "123"
 
     /* Хранение свойств в ассоциативном списке */
-    // https://kotlinlang.ru/docs/reference/delegated-properties.html
+    // Это полезно в "динамическом" коде, например, при работе с JSON:
+    class TheUser(val map: Map<String, Any?>) {
+        val name: String by map
+        val age: Int     by map
+    }
 
+    val theUser = TheUser(mapOf("name" to "John Doe", "age" to 25))
 
+    println(theUser.name) // Prints "John Doe"
+    println(theUser.age)  // Prints 25
+
+    // Поддерживает изменяемые свойства
+    class MutableUser(val map: MutableMap<String, Any?>) {
+        var name: String by map
+        var age: Int     by map
+    }
+
+    val theMutableUser = MutableUser(mutableMapOf("name" to "John Doe", "age" to 25))
+
+    println(theMutableUser.name) // Prints "John Doe"
+    println(theMutableUser.age)  // Prints 25
+
+    /* Функции. Инфиксная запись */
+    infix fun Int.mul2(time: Int): Int {
+        return this shl time // shl = умножим на 2
+    }
+    println(2.mul2(3)) // 2 - this, 3 - аргумент; результат 16
+    println(2 mul2 3)
+
+    /* Функции. Аргументы по умолчанию */
+    readMe(arrayOf(1, 2, 3, 4, 5))
+
+    /* Функции. Как можно вызвать функцию с параметрами по умолчанию */
+    reformat("str")
+    reformat("str", true, true, false, '_')
+    reformat("str", wordSeparator = ';')
+
+    /* Нефиксированное число аргументов (Varargs) */
+    val list1 = asList(1, 2, 3, 4, 5)
+    println(list1) // [1, 2, 3, 4, 5]
+    val arr = arrayOf(1, 2, 3)
+    val list2 = asList(-1, 0, *arr, 4)  // * - spread (передать аргументы один-за-одним)
+    println(list2) // [-1, 0, 1, 2, 3, 4]
+
+    /* Функции анонимные, см. также инфиксную запись */
+    val sum1 = fun Int.(other: Int): Int = this + other
+    println(1.sum1(2))
+
+    /* Singleton1 */
+    val s1 = Singleton1    // Синглтон
+    s1.info = "hello s1"
+    // Если создать второй объект и прочитать значение поля b, то...
+    val s2 = Singleton1
+    //... получим то, что записали в первый объект (first)
+    println(s2.info) // hello s1
+
+    /* Singleton2 */
+    val first = Singleton2.instance
+    first.b = "hello w1"
+    val second = Singleton2.instance
+    println(second.b) // hello w1
+
+    /* Коллекции */
+    val numbers: MutableList<Int> = mutableListOf(1, 2, 3)
+    val readOnlyView: List<Int> = numbers
+    println(numbers)        // выведет "[1, 2, 3]"
+    numbers.add(4)
+    println(readOnlyView)   // выведет "[1, 2, 3, 4]"
+    //readOnlyView.clear()    // -> не скомпилируется
+    val strings = hashSetOf("a", "b", "c", "c")
+    assert(strings.size == 3)
+    println(strings)
 }
+
+/**
+ * Нефиксированное число аргументов (Varargs)
+ */
+fun <T> asList(vararg inputList: T): List<T> {
+    val result = ArrayList<T>()
+    for (element in inputList) // inputList - это массив (Array)
+        result.add(element)
+    return result
+}
+
+/**
+ * Как можно вызвать функцию с параметрами по умолчанию
+ */
+fun reformat(str: String,
+             normalizeCase: Boolean = true,
+             upperCaseFirstLetter: Boolean = true,
+             divideByCamelHumps: Boolean = false,
+             wordSeparator: Char = ' ') {
+    println()
+    //return Unit
+    //return
+}
+
+/**
+ * Функции. Аргументы по умолчанию указываются после =
+ */
+fun readMe(b: Array<Byte>, offset: Int = 0, len: Int = b.size) {
+    println(Arrays.toString(b))
+    println(offset)
+    println(len)
+    //return Unit
+    //return
+}
+
 
 /**
  * - Выражение when - это умный аналог switch
@@ -237,6 +342,8 @@ fun switch(obj: Any) {
             throw Exception("Что-то туд не даг")
         }
     }
+    //return Unit
+    //return
 }
 
 /**
@@ -251,8 +358,11 @@ fun charToInt(c: Char): Int {
 }
 
 /**
- * Краткая функция
+ * Функция с одним выражением
  */
+fun double(x: Int): Int = x * 2
+
+// компилятор может сам определить тип возвращаемого значения
 fun sum(a: Int, b: Int) = a + b
 
 /**
@@ -263,6 +373,8 @@ fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
     val tmp = this[index1] // 'this' относится к листу типа Т
     this[index1] = this[index2]
     this[index2] = tmp
+    //return Unit
+    //return
 }
 
 /**
