@@ -1,7 +1,10 @@
 // имя файла: MainClass.kt
 package ru.davidlevi
 
+import java.io.File
 import java.lang.Math.sin
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
@@ -290,7 +293,168 @@ fun main(args: Array<String>) {
     val strings = hashSetOf("a", "b", "c", "c")
     assert(strings.size == 3)
     println(strings)
+
+    /* Сокращение для "Если не null" */
+    val files = File("Test").listFiles()
+    println(files?.size)
+
+    /* Сокращение для "Если не null, иначе" */
+    val files1 = File("Test").listFiles()
+    println(files1?.size ?: "empty")
+
+    /* Вызов оператора при равенстве null */
+    //val data = ...
+    //val email = data["email"] ?: throw IllegalStateException("Email is missing!")
+
+    /* Выполнение при неравенстве null */
+    val data = "not null"
+    data?.let {
+        println("not null")
+    }
+
+    /* Выражение when */
+    fun transform(color: String): Int {
+        return when (color) {
+            "Red" -> 0
+            "Green" -> 1
+            "Blue" -> 2
+            else -> throw IllegalArgumentException("Invalid color param value")
+        }
+    }
+    println("Color = ${transform("Green")}")
+
+    /* try/catch как выражение */
+    fun test() {
+        fun count(): Int = 0
+
+        val result = try {
+            count()
+        } catch (e: ArithmeticException) {
+            throw IllegalStateException(e)
+        }
+
+        // Обработка результата
+    }
+
+    /* if как выражение */
+    fun foo(param: Int): String {
+        val result = if (param == 1) {
+            "one"
+        } else if (param == 2) {
+            "two"
+        } else {
+            "three"
+        }
+        return result
+    }
+    println(foo(1))
+
+    /* Функция, состоящие из одного выражения */
+    fun theAnswer() = 42
+
+    // аналогична:
+    fun theAnswer1(): Int {
+        return 42
+    }
+
+    fun transform1(color: String): Int = when (color) {
+        "Red" -> 0
+        "Green" -> 1
+        "Blue" -> 2
+        else -> throw IllegalArgumentException("Invalid color param value")
+    }
+
+    /* Вызов нескольких методов объекта ('with') */
+    class Turtle {
+        fun penDown() {}
+        fun penUp() {}
+        fun turn(degrees: Double) {}
+        fun forward(pixels: Double) {}
+    }
+
+    val myTurtle = Turtle()
+    with(myTurtle) {
+        // вызывает методы объекта без указания объекта перед функцией
+        //draw a 100 pix square
+        penDown()
+        for (i in 1..4) {
+            forward(100.0)
+            turn(90.0)
+        }
+        penUp()
+    }
+
+    /* Интервалы */
+    val i = 7
+    if (i in 1..10) { // интервал [1,10]
+        println("Да, $i принадлежит интервалу [1,10]")
+    }
+    for (i in 11..14) print("$i ") // 11 12 13 14
+    println()
+    for (i in 4..1) print(i) // nothing
+    for (i in 14 downTo 11) print("$i ") // 14 13 12 11
+    println()
+    for (i in 2..10 step 2) print("$i ") // 2 4 6 8 10
+    println()
+    for (i in 1..10 step 2) print("$i ") // 1 3 5 7 9
+    println()
+    for (i in 10 downTo 1 step 2) print("$i ") // 10 8 6 4 2
+    println()
+    // создания интервала, который не включает последний элемент перебора, например [1, 10)
+    for (i in 1 until 10) print("$i ") // 1 2 3 4 5 6 7 8 9
+    println()
+
+    /* Проверка объекта на принадлежность к определённому классу */
+    val x: Int = 0;
+    when (x) {
+        is Int -> {
+        }
+        is Number -> {
+        }
+        else -> {
+        }
+    }
+
+    /* Итерация по карте/списку пар */
+    for ((key, value) in mapOf<Int, Int>(1 to 100, 2 to 200))
+        println("$key -> $value")
+
+    /* Функции-расширения */
+    fun String.spaceToCamelCase() {}
+    "Convert this to camelcase".spaceToCamelCase()
+
+    /* Приведение и проверка типов */
+    val obj: String = "abc"
+    if (obj is String) print(obj.length)
+    if (obj !is String) print("не тип String")
+
+    /* Умные приведения */
+    fun demo(x: Any) {
+        if (x is String) print(x.length) // x автоматически преобразовывается в String
+    }
+    // или
+    val xdd: Any = intArrayOf(1, 2, 3)
+    when (xdd) {
+        is Int -> print(xdd + 1)
+        is String -> print(xdd.length + 1)
+        is IntArray -> print(xdd.sum())
+    }
+
+    /* Оператор "небезопасного" приведения as */
+//    val y222: Char = 'A'
+//    val x11: String = y222 as String
+//    val x12: String? = y222 as String?
+//    println("x11=$x11 x12=$x12")
+
+    /* Ключевое слово this с определителем */
+
+
+
+
 }
+
+
+// -============================================================-
 
 /**
  * Нефиксированное число аргументов (Varargs)
