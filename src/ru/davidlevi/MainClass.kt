@@ -445,10 +445,91 @@ fun main(args: Array<String>) {
 //    val x11: String = y222 as String
 //    val x12: String? = y222 as String?
 //    println("x11=$x11 x12=$x12")
+    println()
 
     /* Ключевое слово this с определителем */
+    class All { // неявная метка @All
+        /**
+         * Внутренний класс
+         */
+        inner class B { // неявная метка @B
+            fun Int.foo() { // неявная метка @foo
+                val a = this@All // this из All
+                val b = this@B // this из B
+
+                val c = this // принимающий объект функции foo(), типа Int
+                val c1 = this@foo // принимающий объект функции foo(), типа Int
+
+                val funLit = lambda@ fun String.() {
+                    val d = this // принимающий объект литерала funLit
+                }
 
 
+                val funLit2 = { s: String ->
+                    // принимающий объект функции foo(), т.к. замыкание лямбды не имеет принимающего объекта
+                    val d1 = this
+                }
+            }
+        }
+    }
+
+
+    /* Равенство
+    * - равенство ссылок (две ссылки указывают на один и тот же объект)
+    * - равенство структур, - проверка через equals()
+    */
+    val qwe = 1
+    val asd = 2
+    val zxc = qwe
+    // проверка равенства ссылок:
+    println(qwe === asd) // false
+    println(qwe !== asd) // true
+    println(qwe === zxc) // true
+    // проверка равенства структур:
+    val poi = null
+    val jlo: String = ""
+    // - если poi не null, то equals(Any?)
+    // - если poi null, то jlo сравнивается с (jlo === null), а именно с null
+    println(poi?.equals(jlo) ?: (jlo === null))
+
+
+
+    /* Перегрузка операторов */
+    data class Point(val x: Int, val y: Int)
+
+    operator fun Point.unaryMinus() = Point(-x, -y) // унарный минус
+    operator fun Point.unaryPlus() = Point(+x, +y) // унарный плюс
+
+    val point = Point(10, 20)
+    println(-point)  // выведет "(-10, -20)"
+    println(+point)  // выведет "(10, 20)"
+
+    var xx: Int = 0;
+    xx++ // xx.inc()
+    xx-- // xx.dec()
+
+    // Арифметические операции:
+    //    a + b	    a.plus(b)
+    //    a - b	    a.minus(b)
+    //    a * b	    a.times(b)
+    //    a / b	    a.div(b)
+    //    a % b 	a.rem(b), a.mod(b) (устаревшее)
+    //    a..b	    a.rangeTo(b)
+
+    // Оператор in
+    //    a in b	b.contains(a)
+    //    a !in b	!b.contains(a)
+
+    // Оператор доступа по индексу
+    //    a[i]	a.get(i)
+    //    a[i, j]	a.get(i, j)
+    //    a[i_1, ..., i_n]	a.get(i_1, ..., i_n)
+    //    a[i] = b	a.set(i, b)
+    //    a[i, j] = b	a.set(i, j, b)
+    //    a[i_1, ..., i_n] = b	a.set(i_1, ..., i_n, b)
+
+    // Оператор вызова
+    https://kotlinlang.ru/docs/reference/operator-overloading.html
 
 
 }
