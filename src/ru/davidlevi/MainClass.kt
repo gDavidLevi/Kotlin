@@ -138,9 +138,15 @@ fun main(args: Array<String>) {
     println("$name, $age years of age")
 
     /* Функция возвращает два звачения */
-    val df = Handler(11, 12)
-    val (x1, x2) = df.funReturnsTwoResults(1)
+    val handler = Handler(11, 12)
+    val (x1, x2) = handler.funReturnsTwoResults(1)
     println("x1=$x1 x2=$x2")
+
+    /* Lambda */
+    val lambdaSum: (Int, Int) -> Int = { x, y -> x + y }
+
+    /* Анонимная функция */
+    fun(x: Int, y: Int): Int = x + y
 
     /* Анонимные объекты (ориг. Object expressions) */
     // пример 1. просто объект
@@ -529,7 +535,7 @@ fun main(args: Array<String>) {
     //    a[i_1, ..., i_n] = b	a.set(i_1, ..., i_n, b)
 
     // Оператор вызова
-    https://kotlinlang.ru/docs/reference/operator-overloading.html
+    // https://kotlinlang.ru/docs/reference/operator-overloading.html
 
 
 }
